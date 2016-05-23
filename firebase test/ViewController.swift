@@ -7,19 +7,33 @@
 //
 
 import UIKit
-
+import Firebase
 class ViewController: UIViewController {
 
+    @IBOutlet weak var textField: UITextView!
+    
+    @IBOutlet weak var enterText: UITextField!
+    let textRef = FIRDatabase.database().reference().child("text")
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
+    }
+    
+    override func viewDidAppear(animated: Bool) {
+        super.viewDidAppear(animated)
+        self.enterText.text = ""
+        
+        textRef.observeEventType(.Value){(snap:FIRDataSnapshot)in
+        self.textField.text = snap.value?.description
+        }
     }
 
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    @IBAction func touchDidSent(sender: AnyObject) {
+     textRef.setValue(enterText.text)
+    }
+   
     }
 
 
-}
 
